@@ -52,8 +52,12 @@ class Dashboard extends React.Component {
     }
     let mappedrepos = this.state.data.flatMap((repo) => {
       let temp = [];
-      let old = new Date()
-      old.setDate(old.getDate()-2)
+      let old = new Date();
+      let gap = 5;
+      if (old.getDay() == 1) {
+        gap = 7
+      }
+      old.setDate(old.getDate()-gap)
 
       if (filterRepo(repo.reponame, this.state.repofilter)) {
         for (let branch in repo.branches) {
@@ -67,7 +71,7 @@ class Dashboard extends React.Component {
             continue;
           }
           let build = running.concat(recent).reduce(max_build_num);
-          let date = Date.parse(build.added_at);
+          let date = new Date(build.added_at);
           if (date.getTime() < old.getTime()) {
             continue;
           }

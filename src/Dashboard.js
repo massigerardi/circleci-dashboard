@@ -52,22 +52,29 @@ class Dashboard extends React.Component {
     }
     let mappedrepos = this.state.data.flatMap((repo) => {
       let temp = [];
+      let old = new Date()
+      old.setDate(old.getDate()-2)
+
       if (filterRepo(repo.reponame, this.state.repofilter)) {
         for (let branch in repo.branches) {
           if (filterBranch(branch, this.state.branchfilter)) {
             continue;
           }
+
           let running = repo.branches[branch].running_builds;
           let recent = repo.branches[branch].recent_builds;
           if (!running || !recent || running.length + recent.length === 0) {
             continue;
           }
           let build = running.concat(recent).reduce(max_build_num);
+          let date = Date.parse(build.added_at);
+          if (date.getTime() < old.getTime()) {
+            continue;
+          }
           let key = repo.reponame + branch;
            // /project/:vcs-type/:username/:project/tree/:branch
           let url = "project/" + repo.vcs_type + "/" + repo.username + "/" + repo.reponame + "/tree/" + branch + "?limit=10"
           let reponame = repo.reponame
-          let date = Date.parse(build.added_at);
           temp.push({
             key: key,
             url: url,

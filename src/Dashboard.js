@@ -43,7 +43,7 @@ class Dashboard extends React.Component {
     }
     let repos = this.state.data.filter((repo) => filterRepo(repo.reponame, this.state.repofilter)).flatMap((repo) => repo.reponame);
     repos.sort((a,b) => a.localeCompare(b));
-    return (repos.length > 1 ? 'Repos: ' : 'Repo: ') + repos.join(', ');
+    return (repos.length > 1 ? 'Repos: ' : 'Repo: ') + repos.length;
   }
 
   getSortedTiles() {
@@ -54,7 +54,7 @@ class Dashboard extends React.Component {
       let temp = [];
       let old = new Date();
       let gap = 5;
-      if (old.getDay() == 1) {
+      if (old.getDay() === 1) {
         gap = 7
       }
       old.setDate(old.getDate()-gap)

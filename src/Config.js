@@ -7,9 +7,15 @@ const circleci_token = "circle-token=";
 const tokenKey = 'circle_ci_token';
 const repofilterKey = 'repo_filter';
 const branchfilterKey = 'branch_filter';
+const circleCiProjectUrl = 'circle_ci_project_url'
 
 function getToken() {
   let token = localStorage.getItem(tokenKey);
+  return token != null ? token : '';
+}
+
+export function getCircleCiProjectUrl() {
+  let token = localStorage.getItem(circleCiProjectUrl);
   return token != null ? token : '';
 }
 
@@ -65,12 +71,14 @@ class Config extends React.Component {
     this.state = {
       token: getToken(),
       repofilter: getRepoFilter(),
-      branchfilter: getBranchFilter()
+      branchfilter: getBranchFilter(),
+      circleCiProjectUrl: getCircleCiProjectUrl()
     };
 
     this.handleTokenChange = this.handleTokenChange.bind(this);
     this.handleRepoFilterChange = this.handleRepoFilterChange.bind(this);
     this.handleBranchFilterChange = this.handleBranchFilterChange.bind(this);
+    this.handleCircleCiProjectUrlChange = this.handleCircleCiProjectUrlChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -89,11 +97,17 @@ class Config extends React.Component {
     localStorage.setItem(branchfilterKey, this.state.branchfilter);
   }
 
+  handleCircleCiProjectUrlChange(event) {
+    this.setState({ circleCiProjectUrl: event.target.value });
+    localStorage.setItem(circleCiProjectUrl, this.state.circleCiProjectUrl);
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     localStorage.setItem(tokenKey, this.state.token);
     localStorage.setItem(repofilterKey, this.state.repofilter);
     localStorage.setItem(branchfilterKey, this.state.branchfilter);
+    localStorage.setItem(circleCiProjectUrl, this.state.circleCiProjectUrl);
   }
 
   render() {
@@ -105,6 +119,10 @@ class Config extends React.Component {
               <tr>
                 <td>CircleCI token:</td>
                 <td><input type="text" value={this.state.token} onChange={this.handleTokenChange} size="100"/></td>
+              </tr>
+              <tr>
+                <td>Circle CI Project URL:</td>
+                <td><input type="text" value={this.state.circleCiProjectUrl} onChange={this.handleCircleCiProjectUrlChange} size="100"/></td>
               </tr>
               <tr>
                 <td>Repo filter (include):</td>

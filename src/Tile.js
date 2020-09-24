@@ -4,7 +4,7 @@ import './tile.css';
 import moment from 'moment';
 import classNames from 'classnames';
 import Gravatar from 'gravatar';
-import { doRequest } from './Config'
+import { doRequest, getCircleCiProjectUrl } from './Config'
 
 const max_build_num = (a, b) => a.build_num > b.build_num ? a : b;
 
@@ -104,17 +104,17 @@ class Tile extends React.Component {
       'skipped': build_status === 'skipped',
       'pending': build_status === 'pending'
     });
-
+    let circleCiProjectUrl = getCircleCiProjectUrl()
+    let branchUrl = circleCiProjectUrl+this.state.reponame+"?branch="+this.state.branch
     return (
         <div className={tileClass}>
         <h1>{this.state.reponame}</h1>
         <div className="branch"><span>{this.state.branch}</span></div>
-        <div className="build">Build #{build.build_num}</div>
+        <div className="build"><a href={branchUrl}>Build #{build.build_num}</a></div>
         <div className="email"><img src={avatar} alt={build.author_email} width="75" /></div>
         <div className="author">{authorName}</div>
-
-        <h2>{build.status}</h2>
         <div className="date">{from}</div>
+        <h2>{build.status}</h2>
         </div>
     );
   }
